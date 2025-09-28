@@ -43,7 +43,7 @@ void insertAtEnd(Node*& head, int val) {
 	n->prev = temp;
 }
 
-// Reverse DLL
+// Reverse list
 void reverseList(Node*& head) {
 	if (head == nullptr || head->next == nullptr) return;
 
@@ -67,7 +67,7 @@ void reverseList(Node*& head) {
 	cout << "List reversed successfully.\n";
 }
 
-// Display DLL
+// Display list
 void display(Node* head) {
 	if (head == nullptr) {
 		cout << "List is empty\n";
