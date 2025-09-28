@@ -16,81 +16,115 @@ using namespace std;
    Section A - CSIT
 */
 
-// Node structure for circular linked list
+// Node class for doubly linked list
 class Node {
 public:
     int data;
     Node* next;
-    Node(int d) {
-        data = d;
-        next = nullptr; // initially null
+    Node* prev;
+
+    Node(int val) {
+        data = val;
+        next = nullptr;
+        prev = nullptr;
     }
 };
 
-// Function to create circular linked list
-Node* createCircularList(int n) {
-    if (n <= 0) return nullptr;
+// Function to delete a given node (using pointer)
+void deleteNode(Node*& head, Node* del) {
+    // Case 1: nothing to delete
+    if (head == nullptr || del == nullptr)
+        return;
 
-    int val;
-    cout << "Enter " << n << " values: ";
-    cin >> val;
-    Node* head = new Node(val);
-    Node* temp = head;
+    // Case 2: if node to be deleted is head
+    if (head == del)
+        head = del->next;
 
-    for (int i = 1; i < n; i++) {
-        cin >> val;
-        temp->next = new Node(val);
-        temp = temp->next;
-    }
-    temp->next = head; // last node points to head
-    return head;
+    // Case 3: if node to be deleted is not the last node
+    if (del->next != nullptr)
+        del->next->prev = del->prev;
+
+    // Case 4: if node to be deleted is not the first node
+    if (del->prev != nullptr)
+        del->prev->next = del->next;
+
+    // finally free memory
+    delete del;
 }
 
-// Function to display circular list
-void display(Node* head, int n) {
-    if (!head) return;
-    Node* temp = head;
-    for (int i = 0; i < n; i++) {
-        cout << temp->data << " ";
-        temp = temp->next;
-    }
-    cout << "(back to head)" << endl;
-}
+// Doubly linked list class
+class DoublyLinkedList {
+public:
+    Node* head;
 
-// Function to rotate circular list by k positions
-Node* rotate(Node* head, int k, int n) {
-    if (!head || k % n == 0) return head; // no change if k is multiple of n
-
-    int steps = n - (k % n); // find new head position
-    Node* temp = head;
-
-    // move to (steps-1)th node
-    for (int i = 1; i < steps; i++) {
-        temp = temp->next;
+    DoublyLinkedList() {
+        head = nullptr;
     }
 
-    // new head will be next of temp
-    head = temp->next;
-    return head;
-}
+    // Insert node at end
+    void insert(int val) {
+        Node* n = new Node(val);
+        if (head == nullptr) {
+            head = n;
+        } else {
+            Node* temp = head;
+            while (temp->next != nullptr)
+                temp = temp->next;
+            temp->next = n;
+            n->prev = temp;
+        }
+    }
+
+    // Display all nodes
+    void display() {
+        Node* temp = head;
+        while (temp != nullptr) {
+            cout << temp->data << " ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+
+    // Get node at given position (1-based index)
+    Node* getNodeAt(int pos) {
+        Node* temp = head;
+        int count = 1;
+        while (temp != nullptr && count < pos) {
+            temp = temp->next;
+            count++;
+        }
+        return temp; // will be nullptr if pos > length
+    }
+};
 
 int main() {
-    int n, k;
-    cout << "Enter number of nodes: ";
+    DoublyLinkedList list;
+    int n, val;
+
+    cout << "Enter number of elements to insert: ";
     cin >> n;
 
-    Node* head = createCircularList(n);
+    cout << "Enter " << n << " integers: ";
+    for (int i = 0; i < n; i++) {
+        cin >> val;
+        list.insert(val);
+    }
 
-    cout << "Original list: ";
-    display(head, n);
+    cout << "List: ";
+    list.display();
 
-    cout << "Enter the kth position to rotate list: ";
-    cin >> k;
+    int pos;
+    cout << "Enter position of node to delete: ";
+    cin >> pos;
 
-    head = rotate(head, k, n);
-
-    cout << "Rotated list: ";
-    display(head, n);
+    Node* del = list.getNodeAt(pos);
+    if (del != nullptr) {
+        deleteNode(list.head, del);
+        cout << "List after deletion: ";
+        list.display();
+    } else {
+        cout << "Invalid position, no deletion performed.\n";
+    }
 
     return 0;
 }
