@@ -16,113 +16,81 @@ using namespace std;
    Section A - CSIT
 */
 
+// Node structure for circular linked list
 class Node {
-	public:
-		int data;
-		Node* prev;
-		Node* next;
-		Node(int val) {
-			data = val;
-			prev = nullptr;
-			next = nullptr;
-		}
+public:
+    int data;
+    Node* next;
+    Node(int d) {
+        data = d;
+        next = nullptr; // initially null
+    }
 };
 
-// Insert at end
-void insertAtEnd(Node*& head, int val) {
-	Node* n = new Node(val);
-	if (head == nullptr) {
-		head = n;
-		return;
-	}
-	Node* temp = head;
-	while (temp->next != nullptr) {
-		temp = temp->next;
-	}
-	temp->next = n;
-	n->prev = temp;
+// Function to create circular linked list
+Node* createCircularList(int n) {
+    if (n <= 0) return nullptr;
+
+    int val;
+    cout << "Enter " << n << " values: ";
+    cin >> val;
+    Node* head = new Node(val);
+    Node* temp = head;
+
+    for (int i = 1; i < n; i++) {
+        cin >> val;
+        temp->next = new Node(val);
+        temp = temp->next;
+    }
+    temp->next = head; // last node points to head
+    return head;
 }
 
-// Delete a given node (pointer)
-void deleteNode(Node*& head, Node* delNode) {
-	if (head == nullptr || delNode == nullptr) return;
-
-	if (head == delNode) {
-		head = delNode->next; // move head
-	}
-	if (delNode->next != nullptr) {
-		delNode->next->prev = delNode->prev;
-	}
-	if (delNode->prev != nullptr) {
-		delNode->prev->next = delNode->next;
-	}
-	delete delNode;
+// Function to display circular list
+void display(Node* head, int n) {
+    if (!head) return;
+    Node* temp = head;
+    for (int i = 0; i < n; i++) {
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+    cout << "(back to head)" << endl;
 }
 
-// Delete by value (find first node with value)
-void deleteByValue(Node*& head, int key) {
-	Node* temp = head;
-	while (temp != nullptr) {
-		if (temp->data == key) {
-			deleteNode(head, temp);
-			cout << "Node with value " << key << " deleted.\n";
-			return;
-		}
-		temp = temp->next;
-	}
-	cout << "Value " << key << " not found in list.\n";
-}
+// Function to rotate circular list by k positions
+Node* rotate(Node* head, int k, int n) {
+    if (!head || k % n == 0) return head; // no change if k is multiple of n
 
-// Display List
-void display(Node* head) {
-	if (head == nullptr) {
-		cout << "List is empty\n";
-		return;
-	}
-	Node* temp = head;
-	while (temp != nullptr) {
-		cout << temp->data << " <-> ";
-		temp = temp->next;
-	}
-	cout << "NULL\n";
+    int steps = n - (k % n); // find new head position
+    Node* temp = head;
+
+    // move to (steps-1)th node
+    for (int i = 1; i < steps; i++) {
+        temp = temp->next;
+    }
+
+    // new head will be next of temp
+    head = temp->next;
+    return head;
 }
 
 int main() {
-	Node* head = nullptr;
-	int choice, val;
+    int n, k;
+    cout << "Enter number of nodes: ";
+    cin >> n;
 
-	while (true) {
-		cout << "\nMenu:\n";
-		cout << "1. Insert at end\n";
-		cout << "2. Delete by value\n";
-		cout << "3. Display list\n";
-		cout << "4. Exit\n";
-		cout << "Enter choice: ";
-		cin >> choice;
+    Node* head = createCircularList(n);
 
-		switch (choice) {
-			case 1:
-				cout << "Enter value: ";
-				cin >> val;
-				insertAtEnd(head, val);
-				break;
+    cout << "Original list: ";
+    display(head, n);
 
-			case 2:
-				cout << "Enter value to delete: ";
-				cin >> val;
-				deleteByValue(head, val);
-				break;
+    cout << "Enter the kth position to rotate list: ";
+    cin >> k;
 
-			case 3:
-				cout << "Doubly Linked List: ";
-				display(head);
-				break;
+    head = rotate(head, k, n);
 
-			case 4:
-				return 0;
+    cout << "Rotated list: ";
+    display(head, n);
 
-			default:
-				cout << "Invalid choice!\n";
-		}
-	}
+    return 0;
 }
