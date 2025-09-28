@@ -73,7 +73,7 @@ void deleteByValue(Node*& head, int key) {
 	cout << "Value " << key << " not found in list.\n";
 }
 
-// Display DLL
+// Display List
 void display(Node* head) {
 	if (head == nullptr) {
 		cout << "List is empty\n";
