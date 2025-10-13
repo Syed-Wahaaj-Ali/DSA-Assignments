@@ -36,7 +36,7 @@ int main() {
     cout << "Enter a string: ";
     getline(cin, str);
 
-    str reversed = reverseString(str);
+    string reversed = reverseString(str);
 
     cout << "Reversed string: " << reversed << endl;
     return 0;
