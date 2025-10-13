@@ -17,12 +17,10 @@ using namespace std;
 string reverseString(string str) {
     stack<char> st;
 
-    // Push each character onto the stack
     for (int i = 0; i < str.length(); i++) {
         st.push(str[i]);
     }
 
-    // Pop from stack to get reversed order
     string reversed = "";
     while (!st.empty()) {
         reversed += st.top();
@@ -41,6 +39,5 @@ int main() {
     str reversed = reverseString(str);
 
     cout << "Reversed string: " << reversed << endl;
-
     return 0;
 }
