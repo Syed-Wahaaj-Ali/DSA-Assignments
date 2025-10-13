@@ -1,9 +1,9 @@
 /*
 Assignment #2
 Question 1:
-Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is
-valid. An input string is valid if open brackets are closed by the same type of brackets in the
-correct order.
+Given a string containing just the characters '(', ')', '{', '}', '[' and ']',
+determine if the input string is valid. An input string is valid if open brackets
+are closed by the same type of brackets in the correct order.
 */
 
 #include <iostream>
@@ -19,26 +19,21 @@ using namespace std;
 bool isValidBracket(const string& s) {
     stack<char> st;
 
-    for (char c : s) {
-        // Push opening brackets onto stack
+    for (int i = 0; i < s.length(); i++) {
+        char c = s[i];
         if (c == '(' || c == '{' || c == '[') {
             st.push(c);
-        } 
-        else {
-            // If stack empty or mismatch occurs, invalid
+        } else {
             if (st.empty()) return false;
-
             if ((c == ')' && st.top() != '(') ||
                 (c == '}' && st.top() != '{') ||
                 (c == ']' && st.top() != '[')) {
                 return false;
             }
-
-            st.pop(); // matched pair, pop top
+            st.pop();
         }
     }
 
-    // Stack must be empty for valid expression
     return st.empty();
 }
 
