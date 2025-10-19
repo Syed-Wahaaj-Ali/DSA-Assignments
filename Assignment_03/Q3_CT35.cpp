@@ -8,6 +8,12 @@ with 0, 1 and each subsequent number is the sum of the previous two.
 #include <iostream>
 using namespace std;
 
+/*
+   Name: Syed Wahaaj Ali
+   Roll No: CT-24035
+   Section A - CSIT
+*/
+
 int fibonacci(int n) {
     if (n == 0)
         return 0;
